@@ -1,0 +1,362 @@
+<html>
+   <head>
+      <style type="text/css">
+      canvas{ border:#666 1px solid;}
+      #cursorText{ position:absolute; }
+      </style>
+      <script type ="application/javascript" language="javascript">
+         class Circle {
+            constructor(x, y, radio, dx, dy) {
+               this.x = x;
+               this.y = y;
+               this.r = radio;
+               this.dx = dx;
+               this.dy = dy;
+	       this.color = "black";
+            }
+            drawBall(ctx) {
+               ctx.beginPath();
+               ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2, true);
+               ctx.fillStyle = this.color;
+               ctx.fill();
+            }
+         }
+
+	 class Bouncing {
+            constructor(canvas, totalBalls, ratio, radio) {
+               this.canvas = canvas;
+               this.ctx = canvas.getContext("2d");
+               this.totalBalls = totalBalls
+               this.ratio = ratio;
+               this.circles = Array(this.totalBalls);
+               for (var i = 0; i < this.totalBalls; i+=1) {
+                   this.circles[i] = new Circle(
+			   Math.random() * canvas.width, 
+			   Math.random() * canvas.height,
+               		   radio,
+               		   0.25,
+		   	   0.5
+		   );
+               }
+               this.updateBalls(ratio);
+	       this.timer;
+            }
+	    
+	    init() {
+               this.stop();
+               this.timer = setInterval(this.draw.bind(this), 1);
+            }
+
+	    stop() {
+	       clearInterval(this.timer);
+	    }
+
+	    updateBalls(r) {
+               for (var i = 0; i < this.totalBalls; i+=1) {
+                  if (i/this.totalBalls < r)
+                     this.circles[i].color = "red";
+                  else
+		     this.circles[i].color = "blue";
+               }
+               this.ratio = r;             
+            }
+
+            draw() {
+               this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+               this.ctx.fillStyle = "#FAF7F8";
+               this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+               this.ctx.fillStyle = "#003300";
+               for (var i = 0; i < this.totalBalls; i+=1) {
+                  this.circles[i].drawBall(this.ctx);
+                  if (this.circles[i].x + this.circles[i].dx > this.canvas.width || this.circles[i].x + this.circles[i].dx < 0)
+                     this.circles[i].dx = -this.circles[i].dx;
+                  if (this.circles[i].y + this.circles[i].dy > this.canvas.height || this.circles[i].y + this.circles[i].dy < 0)
+                     this.circles[i].dy = -this.circles[i].dy;
+                  this.circles[i].x += this.circles[i].dx;
+                  this.circles[i].y += this.circles[i].dy;
+               }
+               for (var i = 0; i < this.totalBalls; i++) {
+                  for (var j = i + 1; j < this.totalBalls; j++) {
+                     var dx = this.circles[j].x - this.circles[i].x;
+                     var dy = this.circles[j].y - this.circles[i].y;
+                     var dist = Math.sqrt(dx * dx + dy * dy);
+                     if (dist < (this.circles[j].r + this.circles[i].r)) {
+                        var normalX = dx / dist;
+                        var normalY = dy / dist;
+                        var midpointX = (this.circles[i].x + this.circles[j].x) / 2;
+                        var midpointY = (this.circles[i].y + this.circles[j].y) / 2;
+                        this.circles[i].x = midpointX - normalX * this.circles[i].r;
+                        this.circles[i].y = midpointY - normalY * this.circles[i].r;
+                        this.circles[j].x = midpointX + normalX * this.circles[j].r;
+                        this.circles[j].y = midpointY + normalY * this.circles[j].r;
+                        var dVector = (this.circles[i].dx - this.circles[j].dx) * normalX;
+                        dVector += (this.circles[i].dy - this.circles[j].dy) * normalY;
+                        var dvx = dVector * normalX;
+                        var dvy = dVector * normalY;
+                        this.circles[i].dx -= dvx;
+                        this.circles[i].dy -= dvy;
+                        this.circles[j].dx += dvx;
+                        this.circles[j].dy += dvy;
+                     }
+                  }
+               }
+            }
+	 }
+
+      </script>
+      <script type ="application/javascript" language="javascript">  
+        function LineChart(con) {  
+            // user defined properties  
+            this.canvas = document.getElementById(con.canvasId);  
+            this.minX = con.minX;  
+            this.minY = con.minY;  
+            this.maxX = con.maxX;  
+            this.maxY = con.maxY;  
+            this.unitsPerTickX = con.unitsPerTickX;  
+            this.unitsPerTickY = con.unitsPerTickY;  
+   
+            // constants  
+            this.padding = 10;  
+            this.tickSize = 10;  
+            this.axisColor = "#555";  
+            this.pointRadius = 5;  
+            this.font = "12pt Calibri";  
+   
+            this.fontHeight = 12;  
+   
+            // relationships       
+            this.context = this.canvas.getContext("2d");  
+            this.rangeX = this.maxX - this.minY;  
+            this.rangeY = this.maxY - this.minY;  
+            this.numXTicks = Math.round(this.rangeX / this.unitsPerTickX);  
+            this.numYTicks = Math.round(this.rangeY / this.unitsPerTickY);  
+            this.x = this.getLongestValueWidth() + this.padding * 2;  
+            this.y = this.padding * 2;  
+            this.width = this.canvas.width - this.x - this.padding * 2;  
+            this.height = this.canvas.height - this.y - this.padding - this.fontHeight;  
+            this.scaleX = this.width / this.rangeX;  
+            this.scaleY = this.height / this.rangeY;  
+   
+            // draw x y axis and tick marks  
+            this.drawXAxis();  
+            this.drawYAxis();  
+        }  
+   
+        LineChart.prototype.getLongestValueWidth = function () {  
+            this.context.font = this.font;  
+            var longestValueWidth = 0;  
+            for (var n = 0; n <= this.numYTicks; n++) {  
+                var value = this.maxY - (n * this.unitsPerTickY);  
+                longestValueWidth = Math.max(longestValueWidth, this.context.measureText(value).width);  
+            }  
+            return longestValueWidth;  
+        };  
+   
+        LineChart.prototype.drawXAxis = function () {  
+            var context = this.context;  
+            context.save();  
+            context.beginPath();  
+            context.moveTo(this.x, this.y + this.height);  
+            context.lineTo(this.x + this.width, this.y + this.height);  
+            context.strokeStyle = this.axisColor;  
+            context.lineWidth = 2;  
+            context.stroke();  
+
+            /* Sin marcas ni etiquetas   
+            // draw tick marks  
+            for (var n = 0; n < this.numXTicks; n++) {  
+                context.beginPath();  
+                context.moveTo((n + 1) * this.width / this.numXTicks + this.x, this.y + this.height);  
+                context.lineTo((n + 1) * this.width / this.numXTicks + this.x, this.y + this.height - this.tickSize);  
+                context.stroke();  
+            }  
+   
+            // draw labels  
+            context.font = this.font;  
+            context.fillStyle = "black";  
+            context.textAlign = "center";  
+            context.textBaseline = "middle";  
+   
+            for (var n = 0; n < this.numXTicks; n++) {  
+                var label = Math.round((n + 1) * this.maxX / this.numXTicks);  
+                context.save();  
+                context.translate((n + 1) * this.width / this.numXTicks + this.x, this.y + this.height + this.padding);  
+                context.fillText(label, 0, 0);  
+                context.restore();  
+            }  
+            context.restore();
+            */
+        };  
+   
+        LineChart.prototype.drawYAxis = function () {  
+            var context = this.context;  
+            context.save();  
+            context.save();  
+            context.beginPath();  
+            context.moveTo(this.x, this.y);  
+            context.lineTo(this.x, this.y + this.height);  
+            context.strokeStyle = this.axisColor;  
+            context.lineWidth = 2;  
+            context.stroke();  
+            context.restore();  
+            
+            /* Sin marcas ni etiquetas
+            // draw tick marks  
+            for (var n = 0; n < this.numYTicks; n++) {  
+                context.beginPath();  
+                context.moveTo(this.x, n * this.height / this.numYTicks + this.y);  
+                context.lineTo(this.x + this.tickSize, n * this.height / this.numYTicks + this.y);  
+                context.stroke();  
+            }  
+   
+            // draw values  
+            context.font = this.font;  
+            context.fillStyle = "black";  
+            context.textAlign = "right";  
+            context.textBaseline = "middle";  
+   
+            for (var n = 0; n < this.numYTicks; n++) {  
+                var value = Math.round(this.maxY - n * this.maxY / this.numYTicks);  
+                context.save();  
+                context.translate(this.x - this.padding, n * this.height / this.numYTicks + this.y);  
+                context.fillText(value, 0, 0);  
+                context.restore();  
+            }  
+            context.restore();  
+            */
+        };  
+   
+        LineChart.prototype.drawLine = function (data, color, width) {  
+            var context = this.context;  
+            context.save();  
+            this.transformContext();  
+            context.lineWidth = width;  
+            context.strokeStyle = color;  
+            context.fillStyle = color;  
+            context.beginPath();  
+            context.moveTo(data[0].x * this.scaleX, data[0].y * this.scaleY);  
+   
+            for (var n = 0; n < data.length; n++) {  
+                var point = data[n];  
+   
+                // draw segment  
+                context.lineTo(point.x * this.scaleX, point.y * this.scaleY);  
+                context.stroke();  
+                context.closePath();  
+                //context.beginPath();  
+                //context.arc(point.x * this.scaleX, point.y * this.scaleY, this.pointRadius, 0, 2 * Math.PI, false);  
+                //context.fill();  
+                //context.closePath();  
+   
+                // position for next segment  
+                context.beginPath();  
+                context.moveTo(point.x * this.scaleX, point.y * this.scaleY);  
+            }  
+            context.restore();  
+        };  
+   
+        LineChart.prototype.transformContext = function () {  
+            var context = this.context;  
+   
+            // move context to center of canvas  
+            this.context.translate(this.x, this.y + this.height);  
+   
+            // invert the y scale so that that increments  
+            // as you move upwards  
+            context.scale(1, -1);  
+        };  
+
+      </script>
+      <script type ="application/javascript" language="javascript">   
+         var massBlue;
+         var massRed;
+         var canvas;
+         var start;
+         var stop;
+         var bouncing;
+         var chartCanvas;
+         var chart;
+         var timeNow = 0;
+         var dataRed = [];
+         var dataBlue = [];
+         var maxX = 200;
+         var curTxt;
+         var curTxtLen;
+
+         function moveCursor(e){
+    		if(!e){e=window.event;}
+		var xpos = e.clientX - chartCanvas.offsetLeft - chart.x;
+		redPoint = dataRed.reduce((acc, curr)=> Math.abs(acc.x - xpos / chart.scaleX) < Math.abs(curr.x - xpos / chart.scaleX) ? acc : curr);
+		bluePoint = dataBlue.find(p => p.x == redPoint.x);
+    		curTxt.innerHTML = "<span style='color:red'>" + redPoint.y.toFixed(2) + "<br/><span style='color:blue'>" + bluePoint.y.toFixed(2);
+		curTxt.style.left=e.clientX + 5 +'px';
+    		curTxt.style.top=e.clientY - curTxt.offsetHeight - 5 + 'px';
+	 }
+
+         function update() {
+            var red = Number(massRed.value);
+            var blue = Number(massBlue.value);
+            dataRed.push({x: timeNow, y: red});
+            dataBlue.push({x: timeNow, y: blue});
+	    bouncing.updateBalls(red / (red + blue));
+            if (timeNow > maxX) {
+		var context = document.getElementById("chart").getContext('2d');
+                context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+		maxX = maxX * 1.5;
+		chart = new LineChart({  
+                	canvasId: "chart",  
+                	minX: 0,  
+                	minY: 0,  
+                	maxX: maxX,  
+                	maxY: 100,  
+                	unitsPerTickX: maxX / 200,  
+                	unitsPerTickY: 20  
+            	});
+	    }
+            chart.drawLine(dataRed, "red", 3);  
+            chart.drawLine(dataBlue, "blue", 3);  
+            timeNow++;
+         }
+
+         function init() {
+            canvas = document.getElementById("bouncing");
+            bouncing = new Bouncing(canvas, 100, 0.5, 5);
+            chart = new LineChart({  
+                canvasId: "chart",  
+                minX: 0,  
+                minY: 0,  
+                maxX: 200,  
+                maxY: 100,  
+                unitsPerTickX: 1,  
+                unitsPerTickY: 20  
+            });
+            massBlue = document.getElementById("massBlue");
+            massBlue.addEventListener('input', update);
+            massRed = document.getElementById("massRed");
+            massRed.addEventListener('input', update);
+            start = document.getElementById("init");
+            start.addEventListener('click', bouncing.init.bind(bouncing));
+            stop = document.getElementById("stop");
+            stop.addEventListener('click', bouncing.stop.bind(bouncing));
+            chartCanvas = document.getElementById("chart")
+            chartCanvas.addEventListener('mouseenter', ()=>chartCanvas.addEventListener('mousemove',moveCursor));
+            chartCanvas.addEventListener('mouseleave', ()=>{chartCanvas.removeEventListener('mousemove',moveCursor);curTxt.innerHTML=""});
+            curTxt=document.createElement('div');
+            curTxt.id="cursorText";
+            document.body.appendChild(curTxt);
+            curTxtLen=[curTxt.offsetWidth,curTxt.offsetHeight];
+         }
+
+      </script>
+   </head>
+   <body onload="init();">
+      <div>
+         <canvas id="bouncing" width="200" height="200"></canvas>
+	 <canvas id="chart" width="300" height="300" style="border: 1px solid black;"></canvas>  
+      </div>
+      <input id="massBlue" type="range" min="0" max="100" step="any"/>
+      <input id="massRed" type="range" min="0" max="100" step="any"/>
+      <input id="init" type="button" value="Init"/>
+      <input id="stop" type="button" value="Stop"/>
+   </body>
+   </html>
