@@ -8,6 +8,7 @@
          var curTxtLen;
          var timer;
          var timer2;
+         var timer3;
          var redMass;
          var blueMass;
          var accRed = 0;
@@ -66,7 +67,7 @@
                 bouncing.change(blueBalls, "blue", "red");
                 accBlue -= blueBalls * oneBallMass;
             }
-            setTimeout(bouncing.update.bind(bouncing), REAL_TIME_UPDATE * REAL_TIME_CHANGE_FACTOR);
+            timer3 = setTimeout(bouncing.update.bind(bouncing), REAL_TIME_UPDATE * REAL_TIME_CHANGE_FACTOR);
          }
 
          function init() {
@@ -85,6 +86,9 @@
                 'click', 
                 (event) => {
                     if(event.target.isStarted) {
+                        clearInterval(timer);
+                        clearInterval(timer2);
+                        clearInterval(timer3);
                         accRed = 0;
                         accBlue = 0;
                         timeNow = 0;
@@ -104,8 +108,12 @@
                             unitsPerTickX: maxX / 200,  
                             unitsPerTickY: 20  
                         });        
-                        clearInterval(timer);
-                        clearInterval(timer2);
+                        var button = document.getElementById("pause");
+                        button.isPaused = false;
+                        button.value = "Pause";
+                        button.disabled = true;
+                        document.getElementById("massBlue").disabled = false;
+                        document.getElementById("massRed").disabled = false;
                         event.target.value = "Init";
                         event.target.isStarted = false;
                     } else {
@@ -124,6 +132,9 @@
                         dataBlue.push({x: timeNow * TIME_CHART_FACTOR, y: blueMass});
                         timer = setInterval(bouncing.move.bind(bouncing), REAL_TIME_MOVE);
                         timer2 = setInterval(update, REAL_TIME_UPDATE);
+                        document.getElementById("pause").disabled = false;
+                        document.getElementById("massBlue").disabled = true;
+                        document.getElementById("massRed").disabled = true;
                         event.target.value = "Reset";
                         event.target.isStarted = true;
                     }
