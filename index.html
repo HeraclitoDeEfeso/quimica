@@ -7,8 +7,8 @@
       <script type ="application/javascript" language="javascript" src="chart.js"></script>
       <script type ="application/javascript" language="javascript" src="bouncing.js"></script>
       <script type ="application/javascript" language="javascript">
-         const RED_VEL = 0.0001;            // Velocidad de transformación de los ___ en ___
-         const BLUE_VEL = 0.0008;           // Velocidad de transformación de los ___ en ___
+         const RED_VEL = 0.0003;            // Velocidad de transformación de los ___ en ___
+         const BLUE_VEL = 0.00006;           // Velocidad de transformación de los ___ en ___
          const TIME_INTERVAL = 200;         // Intervalo de tiempo en el que se calculará la transformación
          const TIME_CHART_FACTOR = 0.1;     // Escalamiento del tiempo de reacción en el gráfico
          const CHART_EXPAND_FACTOR = 1.5;   // Factor de expansión del eje del tiempo cuando llega al límite del gráfico
@@ -28,6 +28,46 @@
         <script type ="application/javascript" language="javascript" src="harness.js"></script>
    </head>
    <body onload="init();">
+      <h1>Equilibrio químico</h1>
+      <h3>Resumen</h3>
+      <p>La presente práctica se propone ejemplificar los conceptos
+         involucrados en el equilibrio químico a partir del análisis
+         de una configuración de productos y reactivos a determinada
+         temperatura y volumen constantes, a la vez que presentar
+         la simulación en el tiempo de la reacción como forma alternativa
+         virtual a la realización de la experiencia en un laboratorio.
+      </p>
+      <h2>Objetivos de la práctica</h2>
+      <ul>
+         <li>Estudiar el equilibrio de la transformación del tetróxido 
+            de dinitrógeno (N2O4) en dióxido de nitrógeno (NO2) en un
+            tubo sellado a temperatura constante.
+         </li>
+         <li>Determinar experimentalmente la constante de equilibrio (Kc)</li>
+      </ul>
+      <h2>Introducción</h2>
+      <p>El equilibrio químico es un estado de un sistema reaccionante en el que no se observan cambios a
+         medida que transcurre el tiempo, a pesar de que la reacción sigue. ¿Significa esto que la reacción 
+         se ha detenido? De ninguna manera: continuamente los 
+         reactivos se convirten en productos y los productos se convierten en reactivos. Pero cuando 
+         lo hacen a la misma velocidad es que parece que la reacción se ha paralizado.</p>
+      <p>Veamoslo en la siguiente ecuación para una reacción en general donde la doble
+         flecha es indicativo de su caracter reversible</p>
+      <p>a A + b B ⇆ c C + d D</p>
+      <p>Donde:
+         <ul>
+            <li>A y B son los reactivos y a y b sus coeficientes estequiométricos.</li>
+            <li>C y D son los productos y c y d sus coeficientes estequiométricos.</li>
+            <li>De manera que Vf es la velocidad de formación de productos y Vd la 
+               velocidad de su descomposición.
+            </li>
+         </ul>
+      </p>
+      <p>(...definir constante de equilibrio y su cálculo...)</p>
+      <h2>Experimento</h2>
+      <p>(...describir que experimentación modela el simulador...)</p>
+      <p>(...describir el funcionamiento del simulador...)</p>
+      <div id="cursorText"></div>
       <div>
             <canvas id="bouncing" width="200" height="200"></canvas>
 	        <canvas id="chart" width="300" height="300" style="border: 1px solid black;"></canvas>  
@@ -36,5 +76,14 @@
       <input id="massRed" type="range" min="0" max="200" step="any"/>
       <input id="init" type="button" value="Init"/>
       <input id="pause" type="button" value="Pause" disabled/>
+      <p>(...solicitar que se complete una tabla similar al capítulo del libro...)</p>
+      <p>(...solicitar que se complete la expresión para la constante en este caso...)</p>
+      <p>(...solicitar su valor en este caso...)</p>
+      <h2>Conclusiones</h2>
+      <p>(...remarcar y resumir conceptos importantes...)</p>
+      <p>(...agregar dependencias de la constante en condiciones reales...)</p>
+      <p>(...indicar dónde investigar cómo obtener la constante a otras
+         temperaturas a partir de este experimento, Ecuacion de Arrhenius, etc...)</p>
+      <h2>Referencias</h2>
    </body>
    </html>

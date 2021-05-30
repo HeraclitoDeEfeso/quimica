@@ -25,8 +25,8 @@
                 redPoint = dataRed.reduce((acc, curr)=> Math.abs(acc.x - xpos / chart.scaleX) < Math.abs(curr.x - xpos / chart.scaleX) ? acc : curr);
                 bluePoint = dataBlue.find(p => p.x == redPoint.x);
                 curTxt.innerHTML = "<span style='color:red'>" + redPoint.y.toFixed(2) + "<br/><span style='color:blue'>" + bluePoint.y.toFixed(2);
-                curTxt.style.left=e.clientX + 5 +'px';
-                curTxt.style.top=e.clientY - curTxt.offsetHeight - 5 + 'px';
+                //curTxt.style.left=e.clientX + 5 +'px';
+                //curTxt.style.top=e.clientY - curTxt.offsetHeight - 5 + 'px';
             }
 	    }
 
@@ -159,8 +159,5 @@
             chartCanvas = document.getElementById("chart")
             chartCanvas.addEventListener('mouseenter', ()=>chartCanvas.addEventListener('mousemove',moveCursor));
             chartCanvas.addEventListener('mouseleave', ()=>{chartCanvas.removeEventListener('mousemove',moveCursor);curTxt.innerHTML="";});
-            curTxt=document.createElement('div');
-            curTxt.id="cursorText";
-            document.body.appendChild(curTxt);
-            curTxtLen=[curTxt.offsetWidth,curTxt.offsetHeight];
+            curTxt=document.getElementById("cursorText");
         }
