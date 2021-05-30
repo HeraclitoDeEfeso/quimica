@@ -7,138 +7,30 @@
       <script type ="application/javascript" language="javascript" src="chart.js"></script>
       <script type ="application/javascript" language="javascript" src="bouncing.js"></script>
       <script type ="application/javascript" language="javascript">
-         var massBlue;
-         var massRed;
-         var chartCanvas;
-         var chart;
-         var bouncing;
-         var timeNow = 0;
-         var dataRed = [];
-         var dataBlue = [];
-         var maxX = 200;
-         var curTxt;
-         var curTxtLen;
-         var timer;
-         var timer2;
-         var redMass;
-         var blueMass;
-         var accRed = 0;
-         var accBlue = 0;
-         var redVel = 0.0001;
-         var blueVel = 0.0008;
+         const RED_VEL = 0.0001;            // Velocidad de transformación de los ___ en ___
+         const BLUE_VEL = 0.0008;           // Velocidad de transformación de los ___ en ___
+         const TIME_INTERVAL = 200;         // Intervalo de tiempo en el que se calculará la transformación
+         const TIME_CHART_FACTOR = 0.1;     // Escalamiento del tiempo de reacción en el gráfico
+         const CHART_EXPAND_FACTOR = 1.5;   // Factor de expansión del eje del tiempo cuando llega al límite del gráfico
+         const BALLS_NUMBER = 100;          // Número de particulas que se visualizan
+         const INITIAL_TIME_LENGTH = 0.5/Math.max(RED_VEL, BLUE_VEL);
+                                            // Largo inicial del eje del tiempo del gráfico
+         const REAL_TIME_UPDATE = 1500;     // Tiempo real en milisegundos en el que se actualiza la reacción
+         const REAL_TIME_CHANGE_FACTOR = 0.5; 
+                                            // Factor del tiempo real de actualización para efectivizar el cambio
+                                            // ya marcado en el visor de particulas.
+         const REAL_TIME_MOVE = 20          // Tiempo real en milisegundos del movimiento de particulas
 
-         function moveCursor(e){
-    		if(!e){e=window.event;}
-		    var xpos = e.clientX - chartCanvas.offsetLeft - chart.x;
-            if (dataRed.length) {
-                redPoint = dataRed.reduce((acc, curr)=> Math.abs(acc.x - xpos / chart.scaleX) < Math.abs(curr.x - xpos / chart.scaleX) ? acc : curr);
-                bluePoint = dataBlue.find(p => p.x == redPoint.x);
-                curTxt.innerHTML = "<span style='color:red'>" + redPoint.y.toFixed(2) + "<br/><span style='color:blue'>" + bluePoint.y.toFixed(2);
-                curTxt.style.left=e.clientX + 5 +'px';
-                curTxt.style.top=e.clientY - curTxt.offsetHeight - 5 + 'px';
-            }
-	    }
-
-         function update() {
-            let deltaRed = redMass * redVel * 100;
-            let deltaBlue = blueMass * blueVel * 100;
-            accRed += deltaRed;
-            accBlue += deltaBlue;
-            redMass = redMass - deltaRed + deltaBlue;
-            blueMass = blueMass - deltaBlue + deltaRed;
-            dataRed.push({x: timeNow, y: redMass});
-            dataBlue.push({x: timeNow, y: blueMass});
-            if (timeNow > maxX) {
-		        var context = document.getElementById("chart").getContext('2d');
-                context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-		        maxX = maxX * 1.5;
-		        chart = new LineChart({  
-                	canvasId: "chart",  
-                	minX: 0,  
-                	minY: 0,  
-                	maxX: maxX,  
-                	maxY: 200,  
-                	unitsPerTickX: maxX / 200,  
-                	unitsPerTickY: 20  
-            	});
-	        }
-            chart.drawLine(dataRed, "red", 3);  
-            chart.drawLine(dataBlue, "blue", 3);
-            let deltas = {};
-            let oneBallMass = (redMass + blueMass) / 100;
-            let redBalls = Math.floor(accRed / oneBallMass);
-            if (redBalls) {
-                deltas["red"] = {size: redBalls, color: "blue"};
-                accRed -= redBalls * oneBallMass;
-            }
-            let blueBalls = Math.floor(accBlue / oneBallMass);
-            if (blueBalls) {
-                deltas["blue"] = {size: blueBalls, color: "red"};
-                accBlue -= blueBalls * oneBallMass;
-            }
-            if (Object.keys(deltas).length) {
-                bouncing.change(deltas);
-                setTimeout(bouncing.update.bind(bouncing), 500);
-            }
-            timeNow += 30;
-         }
-
-         function init() {
-            chart = new LineChart({  
-                canvasId: "chart",  
-                minX: 0,  
-                minY: 0,  
-                maxX: 200,  
-                maxY: 200,  
-                unitsPerTickX: 1,  
-                unitsPerTickY: 20  
-            });
-            massBlue = document.getElementById("massBlue");
-            massRed = document.getElementById("massRed");
-            document.getElementById("init").addEventListener(
-                'click', 
-                () => {
-                    redMass = Number(massRed.value);
-                    blueMass = Number(massBlue.value);
-                    let redBalls = Math.floor(redMass / (redMass + blueMass) * 100);
-                    let blueBalls = 100 - redBalls;
-                    bouncing = new Bouncing(
-                        document.getElementById("bouncing"), 
-                        {
-                            "red": redBalls, 
-                            "blue": blueBalls,
-                        }, 
-                        5, 
-                        "violet"
-                    );
-                    clearInterval(timer);
-                    timer = setInterval(bouncing.move.bind(bouncing), 1);
-                    clearInterval(timer2);
-                    timer2 = setInterval(update, 1000);
-                }
-            );
-            document.getElementById("stop").addEventListener(
-                'click', 
-                () => {
-                    clearInterval(timer);
-                    clearInterval(timer2);
-                }
-            );
-            chartCanvas = document.getElementById("chart")
-            chartCanvas.addEventListener('mouseenter', ()=>chartCanvas.addEventListener('mousemove',moveCursor));
-            chartCanvas.addEventListener('mouseleave', ()=>{chartCanvas.removeEventListener('mousemove',moveCursor);curTxt.innerHTML="";});
-            curTxt=document.createElement('div');
-            curTxt.id="cursorText";
-            document.body.appendChild(curTxt);
-            curTxtLen=[curTxt.offsetWidth,curTxt.offsetHeight];
-        }
-
+         // Los valores máximos que es posible elegir para las masas iniciales en __ de los ___
+         // es posible modificarlos en la página misma mediante las propiedades `max` de los <input>
+         // con ID igual a "massBlue" y "massRed"
       </script>
+        <script type ="application/javascript" language="javascript" src="harness.js"></script>
    </head>
    <body onload="init();">
       <div>
-         <canvas id="bouncing" width="200" height="200"></canvas>
-	 <canvas id="chart" width="300" height="300" style="border: 1px solid black;"></canvas>  
+            <canvas id="bouncing" width="200" height="200"></canvas>
+	        <canvas id="chart" width="300" height="300" style="border: 1px solid black;"></canvas>  
       </div>
       <input id="massBlue" type="range" min="0" max="200" step="any"/>
       <input id="massRed" type="range" min="0" max="200" step="any"/>
