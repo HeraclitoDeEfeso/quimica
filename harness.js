@@ -4,10 +4,6 @@
          var chartCanvas;
          var chart;
          var bouncing;
-         var timeNow = 0;
-         var dataRed = [];
-         var dataBlue = [];
-         var maxX = INITIAL_TIME_LENGTH;
          var curTxt;
          var curTxtLen;
          var timer;
@@ -16,6 +12,10 @@
          var blueMass;
          var accRed = 0;
          var accBlue = 0;
+         var timeNow = 0;
+         var dataRed = [];
+         var dataBlue = [];
+         var maxX = INITIAL_TIME_LENGTH;
 
          function moveCursor(e){
     		if(!e){e=window.event;}
@@ -83,31 +83,66 @@
             });
             document.getElementById("init").addEventListener(
                 'click', 
-                () => {
-                    redMass = Number(massRed.value);
-                    blueMass = Number(massBlue.value);
-                    let redBalls = Math.floor(redMass * BALLS_NUMBER / (redMass + blueMass));
-                    let blueBalls = BALLS_NUMBER - redBalls;
-                    bouncing = new Bouncing(
-                        document.getElementById("bouncing"), 
-                        5, 
-                        "black"
-                    );
-                    bouncing.add(redBalls, "red");
-                    bouncing.add(blueBalls, "blue");
-                    dataRed.push({x: timeNow * TIME_CHART_FACTOR, y: redMass});
-                    dataBlue.push({x: timeNow * TIME_CHART_FACTOR, y: blueMass});
-                    clearInterval(timer);
-                    timer = setInterval(bouncing.move.bind(bouncing), REAL_TIME_MOVE);
-                    clearInterval(timer2);
-                    timer2 = setInterval(update, REAL_TIME_UPDATE);
+                (event) => {
+                    if(event.target.isStarted) {
+                        accRed = 0;
+                        accBlue = 0;
+                        timeNow = 0;
+                        dataRed = [];
+                        dataBlue = [];
+                        maxX = INITIAL_TIME_LENGTH;               
+                        var context = document.getElementById("chart").getContext('2d');
+                        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+                        context = document.getElementById("bouncing").getContext('2d');
+                        context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+                        chart = new LineChart({  
+                            canvasId: "chart",  
+                            minX: 0,  
+                            minY: 0,  
+                            maxX: maxX,  
+                            maxY: Number(massRed.value) + Number(massBlue.value),   
+                            unitsPerTickX: maxX / 200,  
+                            unitsPerTickY: 20  
+                        });        
+                        clearInterval(timer);
+                        clearInterval(timer2);
+                        event.target.value = "Init";
+                        event.target.isStarted = false;
+                    } else {
+                        redMass = Number(massRed.value);
+                        blueMass = Number(massBlue.value);
+                        let redBalls = Math.floor(redMass * BALLS_NUMBER / (redMass + blueMass));
+                        let blueBalls = BALLS_NUMBER - redBalls;
+                        bouncing = new Bouncing(
+                            document.getElementById("bouncing"), 
+                            5, 
+                            "black"
+                        );
+                        bouncing.add(redBalls, "red");
+                        bouncing.add(blueBalls, "blue");
+                        dataRed.push({x: timeNow * TIME_CHART_FACTOR, y: redMass});
+                        dataBlue.push({x: timeNow * TIME_CHART_FACTOR, y: blueMass});
+                        timer = setInterval(bouncing.move.bind(bouncing), REAL_TIME_MOVE);
+                        timer2 = setInterval(update, REAL_TIME_UPDATE);
+                        event.target.value = "Reset";
+                        event.target.isStarted = true;
+                    }
                 }
             );
-            document.getElementById("stop").addEventListener(
+            document.getElementById("pause").addEventListener(
                 'click', 
-                () => {
-                    clearInterval(timer);
-                    clearInterval(timer2);
+                (event) => {
+                    if(event.target.isPaused) {
+                        event.target.isPaused = false;
+                        event.target.value = "Pause";
+                        timer = setInterval(bouncing.move.bind(bouncing), REAL_TIME_MOVE);
+                        timer2 = setInterval(update, REAL_TIME_UPDATE);    
+                    } else {
+                        clearInterval(timer);
+                        clearInterval(timer2);
+                        event.target.isPaused = true;
+                        event.target.value = "Continue";
+                    }
                 }
             );
             chartCanvas = document.getElementById("chart")
