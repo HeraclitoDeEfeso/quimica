@@ -3,12 +3,17 @@
       <style type="text/css">
       canvas{ border:#666 1px solid;}
       #cursorText{ position:absolute; }
+	body {font-size: 1.2em;}
+	table, th, td {border: 1px solid black}
       </style>
+      <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       <script type ="application/javascript" language="javascript" src="chart.js"></script>
       <script type ="application/javascript" language="javascript" src="bouncing.js"></script>
       <script type ="application/javascript" language="javascript">
-         const RED_VEL = 0.0003;            // Velocidad de transformación de los ___ en ___
-         const BLUE_VEL = 0.00006;           // Velocidad de transformación de los ___ en ___
+         const RED_VEL = 0.0003;            
+         const BLUE_VEL = 0.0003;           
+         const GREEN_VEL = 0.00005;           
          const TIME_INTERVAL = 200;         // Intervalo de tiempo en el que se calculará la transformación
          const TIME_CHART_FACTOR = 0.1;     // Escalamiento del tiempo de reacción en el gráfico
          const CHART_EXPAND_FACTOR = 1.5;   // Factor de expansión del eje del tiempo cuando llega al límite del gráfico
@@ -28,7 +33,13 @@
         <script type ="application/javascript" language="javascript" src="harness.js"></script>
    </head>
    <body onload="init();">
+
+
+
       <h1>Equilibrio químico</h1>
+
+
+
       <h3>Resumen</h3>
       <p>La presente práctica se propone ejemplificar los conceptos
          involucrados en el equilibrio químico a partir del análisis
@@ -37,15 +48,23 @@
          la simulación en el tiempo de la reacción como forma alternativa
          virtual a la realización de la experiencia en un laboratorio.
       </p>
+
+
       <h2>Objetivos de la práctica</h2>
+
+
       <ul>
-         <li>Estudiar el equilibrio de la transformación del tetróxido 
-            de dinitrógeno (N2O4) en dióxido de nitrógeno (NO2) en un
-            tubo sellado a temperatura constante.
+         <li>Estudiar el equilibrio de la transformación del tiocianato (<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>S</mi><mi>C</mi><msup><mi>N</mi><mo>-</mo></msup></math>)
+            junto con ion férrico (<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><msup><mi>e</mi><mrow><mn>3</mn><mo>+</mo></mrow></msup></math>) en el complejo <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup></math> al encontrarse en un
+            tubo de ensayo en solución acuosa y a temperatura constante, según la fórmula <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>S</mi><mi>C</mi><msup><mi>N</mi><mo>-</mo></msup><mo>+</mo><mi>F</mi><msup><mi>e</mi><mrow><mn>3</mn><mo>+</mo></mrow></msup><mo>&#x21CC;</mo><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup></math>.
          </li>
-         <li>Determinar experimentalmente la constante de equilibrio (Kc)</li>
+         <li>Determinar experimentalmente la constante de equilibrio <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>c</mi></msub></math></li>
       </ul>
+
+
       <h2>Introducción</h2>
+
+
       <p>El equilibrio químico es un estado de un sistema reaccionante en el que no se observan cambios a
          medida que transcurre el tiempo, a pesar de que la reacción sigue. ¿Significa esto que la reacción 
          se ha detenido? De ninguna manera: continuamente los 
@@ -53,20 +72,78 @@
          lo hacen a la misma velocidad es que parece que la reacción se ha paralizado.</p>
       <p>Veamoslo en la siguiente ecuación para una reacción en general donde la doble
          flecha es indicativo de su caracter reversible</p>
-      <p>a A + b B ⇆ c C + d D</p>
+      <p><math xmlns="http://www.w3.org/1998/Math/MathML" title="aA + bB \overset{V_f}{\underset{V_d}{\rightleftharpoons}} cC "><mi>a</mi><mi>A</mi><mo>+</mo><mi>b</mi><mi>B</mi><mover><munder><mo>&#x21CC;</mo><msub><mi>V</mi><mi>d</mi></msub></munder><msub><mi>V</mi><mi>f</mi></msub></mover><mi>c</mi><mi>C</mi></math></p>
       <p>Donde:
          <ul>
-            <li>A y B son los reactivos y a y b sus coeficientes estequiométricos.</li>
-            <li>C y D son los productos y c y d sus coeficientes estequiométricos.</li>
-            <li>De manera que Vf es la velocidad de formación de productos y Vd la 
+            <li><math xmlns="http://www.w3.org/1998/Math/MathML" title="A"><mi>A</mi></math> y <math xmlns="http://www.w3.org/1998/Math/MathML" title="B"><mi>B</mi></math> son los reactivos y <math xmlns="http://www.w3.org/1998/Math/MathML" title="a"><mi>a</mi></math> y <math xmlns="http://www.w3.org/1998/Math/MathML" title="b"><mi>b</mi></math> sus coeficientes estequiométricos.</li>
+            <li><math xmlns="http://www.w3.org/1998/Math/MathML" title="C"><mi>C</mi></math> es el producto y <math xmlns="http://www.w3.org/1998/Math/MathML" title="c"><mi>c</mi></math> su coeficiente estequiométrico.</li>
+            <li>De manera que <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>V</mi><mi>f</mi></msub></math> es la velocidad de formación de productos y <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>V</mi><mi>d</mi></msub></math> la 
                velocidad de su descomposición.
             </li>
          </ul>
       </p>
-      <p>(...definir constante de equilibrio y su cálculo...)</p>
+      <p>La relación entre las concentraciones de los productos y los reactivos de una reacción en equilibrio, define una cantidad llamada constante de equilibrio <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>c</mi></msub></math> o también <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>eq</mi></msub></math>. Esta constante describe la relación entre las concentraciones molares de las especies en el equilibrio para una temperatura específica. De manera que su conocimiento permite estimar si una reacción tiende a mostrar una concentración más alta de productos o de reactivos en el equilibrio, como también determinar si la reacción se encuentra o no en el equilibrio.</p>
+      <p>Podemos expresar su fórmula como:<p>
+      <p><math xmlns="http://www.w3.org/1998/Math/MathML" title="K_c = \frac{[C]^c}{[A]^a[B]^b} "><msub><mi>K</mi><mi>c</mi></msub><mo>=</mo><mfrac><mrow><mi>[</mi><mi>C</mi><msup><mi>]</mi><mi>c</mi></msup></mrow><mrow><mi>[</mi><mi>A</mi><msup><mi>]</mi><mi>a</mi></msup><mi>[</mi><mi>B</mi><msup><mi>]</mi><mi>b</mi></msup></mrow></mfrac></math></p>
+      <p>Donde <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>[</mo><mi>C</mi><mo>]</mo></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>[</mo><mi>B</mi><mo>]</mo></math> y <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>[</mo><mi>A</mi><mo>]</mo></math> refieren a las 
+concentraciones molares de la especies en moles por litro.
+
+
       <h2>Experimento</h2>
-      <p>(...describir que experimentación modela el simulador...)</p>
-      <p>(...describir el funcionamiento del simulador...)</p>
+
+
+      <p>Lo que simularemos será la experiencia que es posible
+	reproducir en un laboratorio mediante la mezcla de dos soluciones
+	en un tubo de ensayo a temperatura constante, una conteniendo
+	una disolución de tiocianato y otra de ion férrico.</p>
+      <p>Luego, la formación del complejo <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup></math> se verá reflejada en un cambio 
+de color, ya que el producto se presenta con color rojo. El uso de 
+un colorímetro o espectrógrafo permitirá mediante la aplicación de
+la Ley de Lambert-Beer, el cálculo de la concentración de la
+especie a partir de la absorbancia lumínica.</p>
+      <p>La siguiente tabla modela los estados de la reacción:</p>
+
+<table>
+<thead>
+  <tr>
+    <th></th>
+    <th><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>S</mi><mi>C</mi><msup><mi>N</mi><mo>-</mo></msup></math></th>
+    <th><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><msup><mi>e</mi><mrow><mn>3</mn><mo>+</mo></mrow></msup></math></th>
+    <th><math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup></math></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Inicial</td>
+    <td><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mfenced open="[" close="]"><mrow><mi>S</mi><mi>C</mi><msup><mi>N</mi><mo>-</mo></msup></mrow></mfenced><mi>i</mi></msub></math></td>
+    <td><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mfenced open="[" close="]"><mrow><mi>F</mi><msup><mi>e</mi><mrow><mn>3</mn><mo>+</mo></mrow></msup></mrow></mfenced><mi>i</mi></msub></math></td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>Reaccionan</td>
+    <td><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>-</mo><msub><mfenced open="[" close="]"><mrow><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup></mrow></mfenced><mi>e</mi></msub></math></td>
+    <td><math xmlns="http://www.w3.org/1998/Math/MathML"><mo>-</mo><msub><mfenced open="[" close="]"><mrow><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup></mrow></mfenced><mi>e</mi></msub></math></td>
+    <td><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mfenced open="[" close="]"><mrow><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup></mrow></mfenced><mi>e</mi></msub></math></td>
+  </tr>
+  <tr>
+    <td>En equilibrio</td>
+    <td><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mfenced open="[" close="]"><mrow><mi>S</mi><mi>C</mi><msup><mi>N</mi><mo>-</mo></msup></mrow></mfenced><mi>i</mi></msub><mo>-</mo><msub><mfenced open="[" close="]"><mrow><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup></mrow></mfenced><mi>e</mi></msub></math></td>
+    <td><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mfenced open="[" close="]"><mrow><mi>F</mi><msup><mi>e</mi><mrow><mn>3</mn><mo>+</mo></mrow></msup></mrow></mfenced><mi>i</mi></msub><mo>-</mo><msub><mfenced open="[" close="]"><mrow><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup></mrow></mfenced><mi>e</mi></msub></math></td>
+    <td><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mfenced open="[" close="]"><mrow><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup></mrow></mfenced><mi>e</mi></msub></math></td>
+  </tr>
+</tbody>
+</table>
+
+      <h2>Simulador</h2>
+
+      <p>Para simular el experimento siga los siguientes pasos:</p>
+      <ol>
+	<li>Agregue una cantidad dada del Reactivo A</li>
+	<li>Agregue una cantidad dada del Reactivo B</li>
+	<li>Al presionar el botón Comenzar las "moléculas" del Reactivo A y del Reactivo B se convierten lentamente en el Producto C, y viceversa, hasta que en un momento la cantidad de reactivo que se transforma en producto iguala a la cantidad de producto que se transforma en reactivo. Esto significa que a partir de un momento dado la cantidad de "moléculas" de cada especie se mantiene constante y esto se ve en el gráfico de avance de reacción</li>
+	<li>Al presiona Terminar, el simulador informará la concentración de los Reactivos A y B que quedan sin reaccionar</li>
+      </ol>
+
       <div id="cursorText"></div>
       <div>
             <canvas id="bouncing" width="200" height="200"></canvas>
@@ -76,14 +153,123 @@
       <input id="massRed" type="range" min="0" max="200" step="any"/>
       <input id="init" type="button" value="Init"/>
       <input id="pause" type="button" value="Pause" disabled/>
-      <p>(...solicitar que se complete una tabla similar al capítulo del libro...)</p>
-      <p>(...solicitar que se complete la expresión para la constante en este caso...)</p>
-      <p>(...solicitar su valor en este caso...)</p>
+      
+	<h2>Análisis de Datos</h2>
+
+	<p>Repetir la experiencia con el simulador
+a los efectos de completar la siguiente tabla:</p>
+
+<table>
+<thead>
+  <tr>
+    <th><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mfenced open="[" close="]"><mrow><mi>S</mi><mi>C</mi><msup><mi>N</mi><mo>-</mo></msup></mrow></mfenced><mi>i</mi></msub></math> (M)</th>
+    <th><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mfenced open="[" close="]"><mrow><mi>F</mi><msup><mi>e</mi><mrow><mn>3</mn><mo>+</mo></mrow></msup></mrow></mfenced><mi>i</mi></msub></math> (M) </th>
+    <th><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mfenced open="[" close="]"><mrow><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup></mrow></mfenced><mi>e</mi></msub></math> (M)</th>
+    <th><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mfenced open="[" close="]"><mrow><mi>S</mi><mi>C</mi><msup><mi>N</mi><mo>-</mo></msup></mrow></mfenced><mi>e</mi></msub></math> (M)</th>
+    <th><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mfenced open="[" close="]"><mrow><mi>F</mi><msup><mi>e</mi><mrow><mn>3</mn><mo>+</mo></mrow></msup></mrow></mfenced><mi>e</mi></msub></math> (M) </th>
+    <th><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>c</mi></msub></math></th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="12"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="5"></input></td>
+  </tr>
+  <tr>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="12"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="5"></input></td>
+  </tr>
+  <tr>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="12"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="5"></input></td>
+  </tr>
+  <tr>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="12"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="5"></input></td>
+  </tr>
+  <tr>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="12"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="10"></input></td>
+    <td>
+<input type="text" size="5"></input></td>
+  </tr>
+</tbody>
+</table>
+
+      <p>Calcular la constante para cada caso
+según la fórmula:</p>
+      <p><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>c</mi></msub><mo>=</mo><mfrac><mrow><mo>[</mo><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup><msub><mo>]</mo><mi>e</mi></msub></mrow><mrow><mo>[</mo><mi>S</mi><mi>C</mi><msup><mi>N</mi><mo>-</mo></msup><msub><mo>]</mo><mi>e</mi></msub><mo>[</mo><mi>F</mi><msup><mi>e</mi><mrow><mn>3</mn><mo>+</mo></mrow></msup><msub><mo>]</mo><mi>e</mi></msub></mrow></mfrac></math></p>
+
       <h2>Conclusiones</h2>
-      <p>(...remarcar y resumir conceptos importantes...)</p>
-      <p>(...agregar dependencias de la constante en condiciones reales...)</p>
-      <p>(...indicar dónde investigar cómo obtener la constante a otras
-         temperaturas a partir de este experimento, Ecuacion de Arrhenius, etc...)</p>
+
+      <ul>
+<li>Una reacción reversible puede proceder tanto hacia productos como hacia reactivos.
+El equilibrio se da cuando la velocidad de la reacción hacia adelante es igual a la velocidad de la reacción en sentido inverso. Las concentraciones de reactivos y productos se mantienen constantes en el equilibrio.
+</li>
+
+<li>Dada la ecuación <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mi>A</mi><mo>+</mo><mi>b</mi><mi>B</mi><mo>&#x21CC;</mo><mi>c</mi><mi>C</mi></math> la constante de equilibrio <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>c</mi></msub></math> se define usando concentraciones molares como:<br />
+<math xmlns="http://www.w3.org/1998/Math/MathML" title="K_c = \frac{[C]^c}{[A]^a[B]^b} "><msub><mi>K</mi><mi>c</mi></msub><mo>=</mo><mfrac><mrow><mi>[</mi><mi>C</mi><msup><mi>]</mi><mi>c</mi></msup></mrow><mrow><mi>[</mi><mi>A</mi><msup><mi>]</mi><mi>a</mi></msup><mi>[</mi><mi>B</mi><msup><mi>]</mi><mi>b</mi></msup></mrow></mfrac></math>
+</li>
+
+Para las reacciones fuera del equilibrio, podemos escribir una expresión similar llamada cociente de reacción QQQ, que es igual a K_\text cK 
+c
+​	
+ K, start subscript, start text, c, end text, end subscript en el equilibrio.
+Se puede usar K_\text cK 
+c
+​	
+ K, start subscript, start text, c, end text, end subscript para determinar si una reacción esta en equilibrio, para calcular las concentraciones en el equilibrio, y para predecir si una reacción favorecerá productos o reactivos en el equilibrio.
+</ul>
+
       <h2>Referencias</h2>
+
    </body>
    </html>

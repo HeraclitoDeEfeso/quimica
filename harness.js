@@ -1,21 +1,24 @@
          
-         var massBlue;              // Masa en __ inicial de ___ azul
-         var massRed;               // Masa en __ inicial de ___ rojo
-         var chartCanvas;
-         var chart;
-         var bouncing;
-         var curTxt;
+         var massBlue;              // Sliders
+         var massRed;               
+         var chartCanvas;           // Chart HTML Canvas
+         var chart;                 // Chart object
+         var bouncing;              // Bouncing object
+         var curTxt;                // Lector valores del chart
          var curTxtLen;
-         var timer;
-         var timer2;
-         var timer3;
-         var redMass;
+         var timer;                 // Temporizador de movimiento
+         var timer2;                // Temporizador de las actualizaciones
+         var timer3;                // Temporizador del cambio de particulas
+         var redMass;               // Concentraciones
          var blueMass;
-         var accRed = 0;
+         var greenMass = 0;
+         var accRed = 0;            // Acumuladores de los cambios en concentracion
          var accBlue = 0;
-         var timeNow = 0;
-         var dataRed = [];
+         var accGreen = 0;
+         var timeNow = 0;           // Eje del tiempo
+         var dataRed = [];          // Valores del chart
          var dataBlue = [];
+         var dataGreen = []
          var maxX = INITIAL_TIME_LENGTH;
 
          function moveCursor(e){
@@ -34,12 +37,16 @@
             timeNow += TIME_INTERVAL;
             let deltaRed = redMass * RED_VEL * TIME_INTERVAL;
             let deltaBlue = blueMass * BLUE_VEL * TIME_INTERVAL;
+            let deltaGreen = greenMass * GREEN_VEL * TIME_INTERVAL;
             accRed += deltaRed;
             accBlue += deltaBlue;
-            redMass = redMass - deltaRed + deltaBlue;
-            blueMass = blueMass - deltaBlue + deltaRed;
+            accGreen += deltaGreen;
+            redMass += deltaGreen - deltaRed;
+            blueMass += deltaGreen - deltaBlue;
+            greenMass += deltaBlue - deltaGreen; // Asumo que son del mismo coeficiente por ahora
             dataRed.push({x: timeNow * TIME_CHART_FACTOR, y: redMass});
             dataBlue.push({x: timeNow * TIME_CHART_FACTOR, y: blueMass});
+            dataGreen.push({x: timeNow * TIME_CHART_FACTOR, y: greenMass});
             if (timeNow * TIME_CHART_FACTOR > maxX) {
 		        var context = document.getElementById("chart").getContext('2d');
                 context.clearRect(0, 0, context.canvas.width, context.canvas.height);
@@ -49,23 +56,30 @@
                 	minX: 0,  
                 	minY: 0,  
                 	maxX: maxX,  
-                	maxY: redMass + blueMass,  
+                	maxY: redMass + blueMass + greenMass,  
                 	unitsPerTickX: maxX / 200,  
                 	unitsPerTickY: 20  
             	});
 	        }
             chart.drawLine(dataRed, "red", 3);  
             chart.drawLine(dataBlue, "blue", 3);
-            let oneBallMass = (redMass + blueMass) / BALLS_NUMBER;
+            chart.drawLine(dataGreen, "green", 3);
+            let oneBallMass = (redMass + blueMass + greenMass) / BALLS_NUMBER;
             let redBalls = Math.floor(accRed / oneBallMass);
             let blueBalls = Math.floor(accBlue / oneBallMass);
+            let greenBalls = Math.trunc(Math.floor(accGreen / oneBallMass)/2);
             if (redBalls) {
-                bouncing.change(redBalls, "red", "blue");
+                bouncing.del(redBalls, "red");
                 accRed -= redBalls * oneBallMass;
             }
             if (blueBalls) {
-                bouncing.change(blueBalls, "blue", "red");
+                bouncing.change(blueBalls, "blue", "green");
                 accBlue -= blueBalls * oneBallMass;
+            }
+            if (greenBalls) {
+                bouncing.change(greenBalls, "green", "blue");
+                bouncing.add(greenBalls, "red");
+                accGreen -= greenBalls * oneBallMass;
             }
             timer3 = setTimeout(bouncing.update.bind(bouncing), REAL_TIME_UPDATE * REAL_TIME_CHANGE_FACTOR);
          }
@@ -91,9 +105,11 @@
                         clearInterval(timer3);
                         accRed = 0;
                         accBlue = 0;
+                        accGreen = 0;
                         timeNow = 0;
                         dataRed = [];
                         dataBlue = [];
+                        dataGren = [];
                         maxX = INITIAL_TIME_LENGTH;               
                         var context = document.getElementById("chart").getContext('2d');
                         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
@@ -119,6 +135,7 @@
                     } else {
                         redMass = Number(massRed.value);
                         blueMass = Number(massBlue.value);
+                        greenMass = 0;
                         let redBalls = Math.floor(redMass * BALLS_NUMBER / (redMass + blueMass));
                         let blueBalls = BALLS_NUMBER - redBalls;
                         bouncing = new Bouncing(
@@ -130,6 +147,7 @@
                         bouncing.add(blueBalls, "blue");
                         dataRed.push({x: timeNow * TIME_CHART_FACTOR, y: redMass});
                         dataBlue.push({x: timeNow * TIME_CHART_FACTOR, y: blueMass});
+                        dataGreen.push({x: timeNow * TIME_CHART_FACTOR, y: greenMass});
                         timer = setInterval(bouncing.move.bind(bouncing), REAL_TIME_MOVE);
                         timer2 = setInterval(update, REAL_TIME_UPDATE);
                         document.getElementById("pause").disabled = false;

@@ -96,6 +96,16 @@ class Bouncing {
         )))
     }
 
+    del(ballsNumber, ballsColor) {
+        for(let i = 0; i < this.circles.length; i++) {
+            if (ballsNumber && this.circles[i].color == ballsColor) {
+                ballsNumber--;
+                this.circles.splice(i, 1);
+            }
+        }
+        this.draw();
+    }
+
     draw() {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         this.ctx.fillStyle = "#FAF7F8";
