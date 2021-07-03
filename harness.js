@@ -42,7 +42,7 @@
                 redPoint = dataRed.reduce((acc, curr)=> Math.abs(acc.x - xpos / chart.scaleX) < Math.abs(curr.x - xpos / chart.scaleX) ? acc : curr);
                 bluePoint = dataBlue.find(p => p.x == redPoint.x);
                 greenPoint = dataGreen.find(p => p.x == redPoint.x);
-                curTxt.innerHTML = "<span style='color:red'>" + redPoint.y.toFixed(3) + "<br/><span style='color:blue'>" + bluePoint.y.toFixed(3) + "<br/><span style='color:green'>" + greenPoint.y.toFixed(3);
+                curTxt.innerHTML = "Concentraciones: <span style='color:red'> " + redPoint.y.toFixed(3) + "</span><span style='color:blue'> " + bluePoint.y.toFixed(3) + "</span><span style='color:green'> " + greenPoint.y.toFixed(3) + "</span>";
                 //curTxt.style.left=e.clientX + 5 +'px';
                 //curTxt.style.top=e.clientY - curTxt.offsetHeight - 5 + 'px';
             }
@@ -189,6 +189,6 @@
             );
             chartCanvas = document.getElementById("chart")
             chartCanvas.addEventListener('mouseenter', ()=>chartCanvas.addEventListener('mousemove',moveCursor));
-            chartCanvas.addEventListener('mouseleave', ()=>{chartCanvas.removeEventListener('mousemove',moveCursor);curTxt.innerHTML="";});
+            chartCanvas.addEventListener('mouseleave', ()=>{chartCanvas.removeEventListener('mousemove',moveCursor);curTxt.innerHTML="Concentraciones:";});
             curTxt=document.getElementById("cursorText");
         }
