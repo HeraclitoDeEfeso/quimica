@@ -5,6 +5,7 @@
       #cursorText{ position:absolute; }
 	body {font-size: 1.2em;}
 	table, th, td {border: 1px solid black}
+	#left {display:inline-block;}
       </style>
       <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -147,14 +148,20 @@ especie a partir de la absorbancia lumínica.</p>
 
       <div id="cursorText"></div>
       <div>
+	<canvas id="chart" width="300" height="300" style="border: 1px solid black;"></canvas>  
+            
+	 <div id="left">       
             <canvas id="bouncing" width="200" height="200"></canvas>
-	        <canvas id="chart" width="300" height="300" style="border: 1px solid black;"></canvas>  
+      <p><label for="massBlue">Producto A (M)</label><input id="massBlue" type="range" min="0" max="200" step="any" list="ticks"/></p>
+      <p><label for="massRed">Producto B (M)</label><input id="massRed" type="range" min="0" max="200" step="any" list="ticks"/></p>
+	<datalist><option value="0" label="0"><option value="200" label="0.200"></datalist>
+      <p>
+	<input id="init" type="button" value="Comenzar"/>
+      <input id="pause" type="button" value="Pausar" disabled/>
+      </p>
+
       </div>
-      <input id="massBlue" type="range" min="0" max="200" step="any"/>
-      <input id="massRed" type="range" min="0" max="200" step="any"/>
-      <input id="init" type="button" value="Init"/>
-      <input id="pause" type="button" value="Pause" disabled/>
-      
+
 	<h2>Análisis de Datos</h2>
 
 	<p>Repetir la experiencia con el simulador

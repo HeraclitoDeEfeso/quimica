@@ -81,7 +81,7 @@
                 	minX: 0,  
                 	minY: 0,  
                 	maxX: maxX,  
-                	maxY: (Number(massRed.value) + Number(massBlue.value)) / 1000,  
+                	maxY:  Math.max(Number(massRed.max),Number(massBlue.max)) / 1000,
                 	unitsPerTickX: maxX / 200,  
                 	unitsPerTickY: 20  
             	});
@@ -103,8 +103,8 @@
                 minX: 0,  
                 minY: 0,  
                 maxX: maxX,  
-                maxY: (Number(massRed.value) + Number(massBlue.value)) / 1000,  
-                unitsPerTickX: 1,  
+                maxY:  Math.max(Number(massRed.max),Number(massBlue.max)) / 1000,
+                unitsPerTickX: maxX / 200,  
                 unitsPerTickY: 20  
             });
             document.getElementById("init").addEventListener(
@@ -131,17 +131,17 @@
                             minX: 0,  
                             minY: 0,  
                             maxX: maxX,  
-                            maxY: (Number(massRed.value) + Number(massBlue.value)) / 1000,   
+                            maxY:  Math.max(Number(massRed.max),Number(massBlue.max)) / 1000,
                             unitsPerTickX: maxX / 200,  
                             unitsPerTickY: 20  
                         });        
                         var button = document.getElementById("pause");
                         button.isPaused = false;
-                        button.value = "Pause";
+                        button.value = "Pausar";
                         button.disabled = true;
                         document.getElementById("massBlue").disabled = false;
                         document.getElementById("massRed").disabled = false;
-                        event.target.value = "Init";
+                        event.target.value = "Comenzar";
                         event.target.isStarted = false;
                     } else {
                         redMass = Number(massRed.value)/1000;
@@ -166,7 +166,7 @@
                         document.getElementById("pause").disabled = false;
                         document.getElementById("massBlue").disabled = true;
                         document.getElementById("massRed").disabled = true;
-                        event.target.value = "Reset";
+                        event.target.value = "Reiniciar";
                         event.target.isStarted = true;
                     }
                 }
@@ -176,14 +176,14 @@
                 (event) => {
                     if(event.target.isPaused) {
                         event.target.isPaused = false;
-                        event.target.value = "Pause";
+                        event.target.value = "Pausar";
                         timer = setInterval(bouncing.move.bind(bouncing), REAL_TIME_MOVE);
                         timer2 = setInterval(update, REAL_TIME_UPDATE);    
                     } else {
                         clearInterval(timer);
                         clearInterval(timer2);
                         event.target.isPaused = true;
-                        event.target.value = "Continue";
+                        event.target.value = "Continuar";
                     }
                 }
             );
