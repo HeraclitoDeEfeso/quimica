@@ -12,22 +12,37 @@
          var redMass;               // Concentraciones
          var blueMass;
          var greenMass = 0;
-         var accRed = 0;            // Acumuladores de los cambios en concentracion
-         var accBlue = 0;
-         var accGreen = 0;
+         var accGreen = 0;          // Acumulador de los cambios en concentracion
          var timeNow = 0;           // Eje del tiempo
          var dataRed = [];          // Valores del chart
          var dataBlue = [];
          var dataGreen = []
          var maxX = INITIAL_TIME_LENGTH;
+         var ballMass;              // Concentración que representa una particula
+         var Xe;                    // Concentración de producto en equilibrio
+
+         function getXe(K, A, B){
+             let b = -(A + B + 1/K);
+             let c = A * B;
+             let det = b * b - 4 * c;
+             let x1 = (-b - Math.sqrt(det)) / 2;
+             let x2 = (-b + Math.sqrt(det)) / 2;
+             let min = Math.min(x1, x2);
+             if (min < 0) {
+                 return Math.max(x1, x2);
+             } else {
+                 return min;
+             }
+         }
 
          function moveCursor(e){
     		if(!e){e=window.event;}
-		    var xpos = e.clientX - chartCanvas.offsetLeft - chart.x;
+		    let xpos = e.clientX - chartCanvas.offsetLeft - chart.x;
             if (dataRed.length) {
                 redPoint = dataRed.reduce((acc, curr)=> Math.abs(acc.x - xpos / chart.scaleX) < Math.abs(curr.x - xpos / chart.scaleX) ? acc : curr);
                 bluePoint = dataBlue.find(p => p.x == redPoint.x);
-                curTxt.innerHTML = "<span style='color:red'>" + redPoint.y.toFixed(2) + "<br/><span style='color:blue'>" + bluePoint.y.toFixed(2);
+                greenPoint = dataGreen.find(p => p.x == redPoint.x);
+                curTxt.innerHTML = "<span style='color:red'>" + redPoint.y.toFixed(3) + "<br/><span style='color:blue'>" + bluePoint.y.toFixed(3) + "<br/><span style='color:green'>" + greenPoint.y.toFixed(3);
                 //curTxt.style.left=e.clientX + 5 +'px';
                 //curTxt.style.top=e.clientY - curTxt.offsetHeight - 5 + 'px';
             }
@@ -35,18 +50,28 @@
 
          function update() {
             timeNow += TIME_INTERVAL;
-            let deltaRed = redMass * RED_VEL * TIME_INTERVAL;
-            let deltaBlue = blueMass * BLUE_VEL * TIME_INTERVAL;
-            let deltaGreen = greenMass * GREEN_VEL * TIME_INTERVAL;
-            accRed += deltaRed;
-            accBlue += deltaBlue;
-            accGreen += deltaGreen;
-            redMass += deltaGreen - deltaRed;
-            blueMass += deltaGreen - deltaBlue;
-            greenMass += deltaBlue - deltaGreen; // Asumo que son del mismo coeficiente por ahora
-            dataRed.push({x: timeNow * TIME_CHART_FACTOR, y: redMass});
-            dataBlue.push({x: timeNow * TIME_CHART_FACTOR, y: blueMass});
-            dataGreen.push({x: timeNow * TIME_CHART_FACTOR, y: greenMass});
+            let newGreen = Xe * (1 - Math.exp(-timeNow));
+            let deltaGreen = newGreen - greenMass;
+            if (Xe - greenMass < 2 * ballMass) {
+                bouncing.add(1, "green");
+                bouncing.change(1, "green", "blue");
+                bouncing.change(1, "green", "red");
+                bouncing.change(1, "blue", "green");
+                bouncing.change(1, "red", "green");
+            } else {
+                accGreen += deltaGreen;
+                if (accGreen > 2 * ballMass) {
+                    let greenBalls = Math.floor(accGreen / (2 * ballMass));
+                    accGreen -= greenBalls * 2 * ballMass;
+                    bouncing.change(greenBalls, "blue", "green");
+                    bouncing.change(greenBalls, "red", "green");
+                    bouncing.del(greenBalls,"blue");
+                    bouncing.del(greenBalls,"red");
+                }
+            }
+            redMass -= deltaGreen;
+            blueMass -= deltaGreen;
+            greenMass += deltaGreen; 
             if (timeNow * TIME_CHART_FACTOR > maxX) {
 		        var context = document.getElementById("chart").getContext('2d');
                 context.clearRect(0, 0, context.canvas.width, context.canvas.height);
@@ -56,31 +81,17 @@
                 	minX: 0,  
                 	minY: 0,  
                 	maxX: maxX,  
-                	maxY: redMass + blueMass + greenMass,  
+                	maxY: (Number(massRed.value) + Number(massBlue.value)) / 1000,  
                 	unitsPerTickX: maxX / 200,  
                 	unitsPerTickY: 20  
             	});
 	        }
+            dataRed.push({x: timeNow * TIME_CHART_FACTOR, y: redMass});
+            dataBlue.push({x: timeNow * TIME_CHART_FACTOR, y: blueMass});
+            dataGreen.push({x: timeNow * TIME_CHART_FACTOR, y: greenMass});
             chart.drawLine(dataRed, "red", 3);  
             chart.drawLine(dataBlue, "blue", 3);
             chart.drawLine(dataGreen, "green", 3);
-            let oneBallMass = (redMass + blueMass + greenMass) / BALLS_NUMBER;
-            let redBalls = Math.floor(accRed / oneBallMass);
-            let blueBalls = Math.floor(accBlue / oneBallMass);
-            let greenBalls = Math.trunc(Math.floor(accGreen / oneBallMass)/2);
-            if (redBalls) {
-                bouncing.del(redBalls, "red");
-                accRed -= redBalls * oneBallMass;
-            }
-            if (blueBalls) {
-                bouncing.change(blueBalls, "blue", "green");
-                accBlue -= blueBalls * oneBallMass;
-            }
-            if (greenBalls) {
-                bouncing.change(greenBalls, "green", "blue");
-                bouncing.add(greenBalls, "red");
-                accGreen -= greenBalls * oneBallMass;
-            }
             timer3 = setTimeout(bouncing.update.bind(bouncing), REAL_TIME_UPDATE * REAL_TIME_CHANGE_FACTOR);
          }
 
@@ -92,7 +103,7 @@
                 minX: 0,  
                 minY: 0,  
                 maxX: maxX,  
-                maxY: Number(massRed.value) + Number(massBlue.value),  
+                maxY: (Number(massRed.value) + Number(massBlue.value)) / 1000,  
                 unitsPerTickX: 1,  
                 unitsPerTickY: 20  
             });
@@ -109,7 +120,7 @@
                         timeNow = 0;
                         dataRed = [];
                         dataBlue = [];
-                        dataGren = [];
+                        dataGreen = [];
                         maxX = INITIAL_TIME_LENGTH;               
                         var context = document.getElementById("chart").getContext('2d');
                         context.clearRect(0, 0, context.canvas.width, context.canvas.height);
@@ -120,7 +131,7 @@
                             minX: 0,  
                             minY: 0,  
                             maxX: maxX,  
-                            maxY: Number(massRed.value) + Number(massBlue.value),   
+                            maxY: (Number(massRed.value) + Number(massBlue.value)) / 1000,   
                             unitsPerTickX: maxX / 200,  
                             unitsPerTickY: 20  
                         });        
@@ -133,10 +144,12 @@
                         event.target.value = "Init";
                         event.target.isStarted = false;
                     } else {
-                        redMass = Number(massRed.value);
-                        blueMass = Number(massBlue.value);
+                        redMass = Number(massRed.value)/1000;
+                        blueMass = Number(massBlue.value)/1000;
+                        Xe = getXe(K, redMass, blueMass)
                         greenMass = 0;
-                        let redBalls = Math.floor(redMass * BALLS_NUMBER / (redMass + blueMass));
+                        ballMass = (redMass + blueMass) / BALLS_NUMBER;
+                        let redBalls = Math.floor(redMass / ballMass);
                         let blueBalls = BALLS_NUMBER - redBalls;
                         bouncing = new Bouncing(
                             document.getElementById("bouncing"), 

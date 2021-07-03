@@ -11,24 +11,24 @@
       <script type ="application/javascript" language="javascript" src="chart.js"></script>
       <script type ="application/javascript" language="javascript" src="bouncing.js"></script>
       <script type ="application/javascript" language="javascript">
-         const RED_VEL = 0.0003;            
-         const BLUE_VEL = 0.0003;           
-         const GREEN_VEL = 0.00005;           
-         const TIME_INTERVAL = 200;         // Intervalo de tiempo en el que se calculará la transformación
-         const TIME_CHART_FACTOR = 0.1;     // Escalamiento del tiempo de reacción en el gráfico
+         const TIME_INTERVAL = -Math.log(.01)/20;
+                                            // Intervalo de tiempo en el que se calculará la transformación
+         const TIME_CHART_FACTOR = 1;
+                                            // Escalamiento del tiempo de reacción en el gráfico
          const CHART_EXPAND_FACTOR = 1.5;   // Factor de expansión del eje del tiempo cuando llega al límite del gráfico
          const BALLS_NUMBER = 100;          // Número de particulas que se visualizan
-         const INITIAL_TIME_LENGTH = 0.5/Math.max(RED_VEL, BLUE_VEL);
+         const INITIAL_TIME_LENGTH = 30 * TIME_INTERVAL;
                                             // Largo inicial del eje del tiempo del gráfico
          const REAL_TIME_UPDATE = 1500;     // Tiempo real en milisegundos en el que se actualiza la reacción
          const REAL_TIME_CHANGE_FACTOR = 0.5; 
                                             // Factor del tiempo real de actualización para efectivizar el cambio
                                             // ya marcado en el visor de particulas.
          const REAL_TIME_MOVE = 20          // Tiempo real en milisegundos del movimiento de particulas
-
-         // Los valores máximos que es posible elegir para las masas iniciales en __ de los ___
-         // es posible modificarlos en la página misma mediante las propiedades `max` de los <input>
-         // con ID igual a "massBlue" y "massRed"
+         const K = 250                      // Constante del equilibrio
+         // Los valores máximos que es posible elegir para las concentraciones iniciales 
+         // de los reactivos es posible modificarlos en la página misma mediante las 
+         // propiedades `max` de los <input> con ID igual a "massBlue" y "massRed"
+         // donde están expresados como enteros en milésimas de M (moles/litro)
       </script>
         <script type ="application/javascript" language="javascript" src="harness.js"></script>
    </head>
@@ -259,14 +259,12 @@ El equilibrio se da cuando la velocidad de la reacción hacia adelante es igual 
 <math xmlns="http://www.w3.org/1998/Math/MathML" title="K_c = \frac{[C]^c}{[A]^a[B]^b} "><msub><mi>K</mi><mi>c</mi></msub><mo>=</mo><mfrac><mrow><mi>[</mi><mi>C</mi><msup><mi>]</mi><mi>c</mi></msup></mrow><mrow><mi>[</mi><mi>A</mi><msup><mi>]</mi><mi>a</mi></msup><mi>[</mi><mi>B</mi><msup><mi>]</mi><mi>b</mi></msup></mrow></mfrac></math>
 </li>
 
-Para las reacciones fuera del equilibrio, podemos escribir una expresión similar llamada cociente de reacción QQQ, que es igual a K_\text cK 
-c
-​	
- K, start subscript, start text, c, end text, end subscript en el equilibrio.
-Se puede usar K_\text cK 
-c
-​	
- K, start subscript, start text, c, end text, end subscript para determinar si una reacción esta en equilibrio, para calcular las concentraciones en el equilibrio, y para predecir si una reacción favorecerá productos o reactivos en el equilibrio.
+<li>Para las reacciones fuera del equilibrio, podemos escribir una expresión similar 
+  llamada cociente de reacción <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>Q</mi></math>, que es igual a <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>c</mi></msub></math> en el equilibrio.</li>
+  
+<li>Se puede usar <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>c</mi></msub></math> para determinar si una reacción esta en equilibrio, para 
+  calcular las concentraciones en el equilibrio, y para predecir si una reacción 
+  favorecerá productos o reactivos en el equilibrio.</li>
 </ul>
 
       <h2>Referencias</h2>
