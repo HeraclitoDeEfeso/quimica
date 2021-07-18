@@ -1,12 +1,6 @@
 <html>
    <head>
-      <style type="text/css">
-      canvas{ border:#666 1px solid;}
-      /* #cursorText{ position:absolute; }*/
-	body {font-size: 1.2em;}
-	table, th, td {border: 1px solid black}
-	#left {display:inline-block;}
-      </style>
+      <link rel="stylesheet" href="lookfeel.css">
       <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       <script type ="application/javascript" language="javascript" src="chart.js"></script>
@@ -17,14 +11,14 @@
          const TIME_CHART_FACTOR = 1;
                                             // Escalamiento del tiempo de reacción en el gráfico
          const CHART_EXPAND_FACTOR = 1.5;   // Factor de expansión del eje del tiempo cuando llega al límite del gráfico
-         const BALLS_NUMBER = 100;          // Número de particulas que se visualizan
+         const BALLS_NUMBER = 100;          // Número de partículas que se visualizan
          const INITIAL_TIME_LENGTH = 30 * TIME_INTERVAL;
                                             // Largo inicial del eje del tiempo del gráfico
          const REAL_TIME_UPDATE = 1500;     // Tiempo real en milisegundos en el que se actualiza la reacción
          const REAL_TIME_CHANGE_FACTOR = 0.5; 
                                             // Factor del tiempo real de actualización para efectivizar el cambio
-                                            // ya marcado en el visor de particulas.
-         const REAL_TIME_MOVE = 20          // Tiempo real en milisegundos del movimiento de particulas
+                                            // ya marcado en el visor de partículas.
+         const REAL_TIME_MOVE = 20          // Tiempo real en milisegundos del movimiento de partículas
          const K = 250                      // Constante del equilibrio
          // Los valores máximos que es posible elegir para las concentraciones iniciales 
          // de los reactivos es posible modificarlos en la página misma mediante las 
@@ -73,7 +67,7 @@
          lo hacen a la misma velocidad es que parece que la reacción se ha paralizado.</p>
       <p>Veamoslo en la siguiente ecuación para una reacción en general donde la doble
          flecha es indicativo de su caracter reversible</p>
-      <p><math xmlns="http://www.w3.org/1998/Math/MathML" title="aA + bB \overset{V_f}{\underset{V_d}{\rightleftharpoons}} cC "><mi>a</mi><mi>A</mi><mo>+</mo><mi>b</mi><mi>B</mi><mover><munder><mo>&#x21CC;</mo><msub><mi>V</mi><mi>d</mi></msub></munder><msub><mi>V</mi><mi>f</mi></msub></mover><mi>c</mi><mi>C</mi></math></p>
+      <p class="eqn"><math xmlns="http://www.w3.org/1998/Math/MathML" title="aA + bB \overset{V_f}{\underset{V_d}{\rightleftharpoons}} cC "><mi>a</mi><mi>A</mi><mo>+</mo><mi>b</mi><mi>B</mi><mover><munder><mo>&#x21CC;</mo><msub><mi>V</mi><mi>d</mi></msub></munder><msub><mi>V</mi><mi>f</mi></msub></mover><mi>c</mi><mi>C</mi></math></p>
       <p>Donde:
          <ul>
             <li><math xmlns="http://www.w3.org/1998/Math/MathML" title="A"><mi>A</mi></math> y <math xmlns="http://www.w3.org/1998/Math/MathML" title="B"><mi>B</mi></math> son los reactivos y <math xmlns="http://www.w3.org/1998/Math/MathML" title="a"><mi>a</mi></math> y <math xmlns="http://www.w3.org/1998/Math/MathML" title="b"><mi>b</mi></math> sus coeficientes estequiométricos.</li>
@@ -85,9 +79,9 @@
       </p>
       <p>La relación entre las concentraciones de los productos y los reactivos de una reacción en equilibrio, define una cantidad llamada constante de equilibrio <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>c</mi></msub></math> o también <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>eq</mi></msub></math>. Esta constante describe la relación entre las concentraciones molares de las especies en el equilibrio para una temperatura específica. De manera que su conocimiento permite estimar si una reacción tiende a mostrar una concentración más alta de productos o de reactivos en el equilibrio, como también determinar si la reacción se encuentra o no en el equilibrio.</p>
       <p>Podemos expresar su fórmula como:<p>
-      <p><math xmlns="http://www.w3.org/1998/Math/MathML" title="K_c = \frac{[C]^c}{[A]^a[B]^b} "><msub><mi>K</mi><mi>c</mi></msub><mo>=</mo><mfrac><mrow><mi>[</mi><mi>C</mi><msup><mi>]</mi><mi>c</mi></msup></mrow><mrow><mi>[</mi><mi>A</mi><msup><mi>]</mi><mi>a</mi></msup><mi>[</mi><mi>B</mi><msup><mi>]</mi><mi>b</mi></msup></mrow></mfrac></math></p>
+      <p class="eqn"><math xmlns="http://www.w3.org/1998/Math/MathML" title="K_c = \frac{[C]^c}{[A]^a[B]^b} "><msub><mi>K</mi><mi>c</mi></msub><mo>=</mo><mfrac><mrow><mi>[</mi><mi>C</mi><msup><mi>]</mi><mi>c</mi></msup></mrow><mrow><mi>[</mi><mi>A</mi><msup><mi>]</mi><mi>a</mi></msup><mi>[</mi><mi>B</mi><msup><mi>]</mi><mi>b</mi></msup></mrow></mfrac></math></p>
       <p>Donde <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>[</mo><mi>C</mi><mo>]</mo></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>[</mo><mi>B</mi><mo>]</mo></math> y <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>[</mo><mi>A</mi><mo>]</mo></math> refieren a las 
-concentraciones molares de la especies en moles por litro.
+concentraciones molares de las especies en moles por litro.
 
 
       <h2>Experimento</h2>
@@ -254,7 +248,7 @@ a los efectos de completar la siguiente tabla:</p>
 
       <p>Calcular la constante para cada caso
 según la fórmula:</p>
-      <p><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>c</mi></msub><mo>=</mo><mfrac><mrow><mo>[</mo><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup><msub><mo>]</mo><mi>e</mi></msub></mrow><mrow><mo>[</mo><mi>S</mi><mi>C</mi><msup><mi>N</mi><mo>-</mo></msup><msub><mo>]</mo><mi>e</mi></msub><mo>[</mo><mi>F</mi><msup><mi>e</mi><mrow><mn>3</mn><mo>+</mo></mrow></msup><msub><mo>]</mo><mi>e</mi></msub></mrow></mfrac></math></p>
+      <p class="eqn"><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>c</mi></msub><mo>=</mo><mfrac><mrow><mo>[</mo><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup><msub><mo>]</mo><mi>e</mi></msub></mrow><mrow><mo>[</mo><mi>S</mi><mi>C</mi><msup><mi>N</mi><mo>-</mo></msup><msub><mo>]</mo><mi>e</mi></msub><mo>[</mo><mi>F</mi><msup><mi>e</mi><mrow><mn>3</mn><mo>+</mo></mrow></msup><msub><mo>]</mo><mi>e</mi></msub></mrow></mfrac></math></p>
 
       <h2>Conclusiones</h2>
 
@@ -263,7 +257,7 @@ según la fórmula:</p>
 El equilibrio se da cuando la velocidad de la reacción hacia adelante es igual a la velocidad de la reacción en sentido inverso. Las concentraciones de reactivos y productos se mantienen constantes en el equilibrio.
 </li>
 
-<li>Dada la ecuación <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mi>A</mi><mo>+</mo><mi>b</mi><mi>B</mi><mo>&#x21CC;</mo><mi>c</mi><mi>C</mi></math> la constante de equilibrio <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>c</mi></msub></math> se define usando concentraciones molares como:<br />
+<li>Dada la ecuación <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>a</mi><mi>A</mi><mo>+</mo><mi>b</mi><mi>B</mi><mo>&#x21CC;</mo><mi>c</mi><mi>C</mi></math> la constante de equilibrio <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>c</mi></msub></math> se define usando concentraciones molares como:
 <math xmlns="http://www.w3.org/1998/Math/MathML" title="K_c = \frac{[C]^c}{[A]^a[B]^b} "><msub><mi>K</mi><mi>c</mi></msub><mo>=</mo><mfrac><mrow><mi>[</mi><mi>C</mi><msup><mi>]</mi><mi>c</mi></msup></mrow><mrow><mi>[</mi><mi>A</mi><msup><mi>]</mi><mi>a</mi></msup><mi>[</mi><mi>B</mi><msup><mi>]</mi><mi>b</mi></msup></mrow></mfrac></math>
 </li>
 
