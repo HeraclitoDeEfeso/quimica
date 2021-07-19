@@ -133,27 +133,43 @@ especie a partir de la absorbancia lumínica.</p>
 
       <p>Para simular el experimento siga los siguientes pasos:</p>
       <ol>
-	<li>Seleccione una cantidad dada del Reactivo A</li>
-	<li>Seleccione una cantidad dada del Reactivo B</li>
-	<li>Al presionar el botón Comenzar las "moléculas" del Reactivo A y del Reactivo B se convierten lentamente en el Producto C, y viceversa, hasta que en un momento la cantidad de reactivo que se transforma en producto iguala a la cantidad de producto que se transforma en reactivo. Esto significa que a partir de un momento dado la cantidad de "moléculas" de cada especie se mantiene constante y esto se ve en el gráfico de avance de reacción</li>
-	<li>Puede presionar Pausar para detener momentáneamente la reacción. </li>
-  <li>La concentración de los Reactivos A y B que quedan sin reaccionar y la concentración resultante del Producto C pueden visualizarse ubicándose en un tiempo determinado en el gráfico.</li>
+	      <li>Seleccione una cantidad dada del Reactivo A. El rango va de 0 a 0,200 M (moles por litro).</li>
+	      <li>Seleccione una cantidad dada del Reactivo B. El rango va de 0 a 0,200 M (moles por litro).</li>
+	      <li>Al presionar el botón Comenzar las "moléculas" del Reactivo A y del Reactivo B se convierten lentamente en el Producto C, y viceversa, hasta que en un momento la cantidad de reactivo que se transforma en producto iguala a la cantidad de producto que se transforma en reactivo. Esto significa que a partir de un momento dado la cantidad de "moléculas" de cada especie se mantiene constante y esto se ve en el gráfico de avance de reacción</li>
+	      <li>Puede presionar Pausar para detener momentáneamente la reacción. </li>
+        <li>La concentración de los Reactivos A y B que quedan sin reaccionar y la concentración resultante del Producto C pueden visualizarse ubicándose en un tiempo determinado en el gráfico.</li>
       </ol>
-
-      <div id="cursorText">Concentraciones:</div>
-      <div>
-	<canvas id="chart" width="300" height="300" style="border: 1px solid black;"></canvas>  
-            
-	 <div id="left">       
-            <canvas id="bouncing" width="200" height="200"></canvas>
-      <p><label for="massBlue">Producto A (M)</label><input id="massBlue" type="range" min="0" max="200" step="any" list="ticks"/></p>
-      <p><label for="massRed">Producto B (M)</label><input id="massRed" type="range" min="0" max="200" step="any" list="ticks"/></p>
-	<datalist><option value="0" label="0"><option value="200" label="0.200"></datalist>
-      <p>
-	<input id="init" type="button" value="Comenzar"/>
-      <input id="pause" type="button" value="Pausar" disabled/>
-      </p>
-
+      
+      <div id="simulador">
+        <div id="left">
+          <div class="bouncing">
+            <canvas id="bouncing" width="250" height="250"></canvas>
+          </div>
+          <p>
+            <input id="init" type="button" value="Comenzar"/>
+          </p>
+          <p>
+            <input id="pause" type="button" value="Pausar" disabled/>
+          </p>
+        </div>
+	      <div id="right">
+          <div id="cursorText">Concentraciones:</div>  
+          <div class="box lifted-corner">
+            <canvas id="chart" width="400" height="200"></canvas>
+          </div>
+            <p>
+              <label for="massBlue">Reactivo A (moles/l)</label>
+              <input id="massBlue" type="range" min="0" max="200" step="any" list="ticks"/>
+            </p>
+            <p>
+              <label for="massRed">Reactivo B (moles/l)</label>
+              <input id="massRed" type="range" min="0" max="200" step="any" list="ticks"/>
+            </p>
+	          <datalist>
+              <option value="0" label="0">
+              <option value="200" label="0.200">
+            </datalist>
+        </div>
       </div>
 
 	<h2>Análisis de Datos</h2>

@@ -37,12 +37,12 @@
 
          function moveCursor(e){
     		if(!e){e=window.event;}
-		    let xpos = e.clientX - chartCanvas.offsetLeft - chart.x;
+		    let xpos = e.clientX - chartCanvas.getBoundingClientRect().x - chart.x;
             if (dataRed.length) {
                 redPoint = dataRed.reduce((acc, curr)=> Math.abs(acc.x - xpos / chart.scaleX) < Math.abs(curr.x - xpos / chart.scaleX) ? acc : curr);
                 bluePoint = dataBlue.find(p => p.x == redPoint.x);
                 greenPoint = dataGreen.find(p => p.x == redPoint.x);
-                curTxt.innerHTML = "Concentraciones: <span style='color:red'> " + redPoint.y.toFixed(3) + "</span><span style='color:blue'> " + bluePoint.y.toFixed(3) + "</span><span style='color:green'> " + greenPoint.y.toFixed(3) + "</span>";
+                curTxt.innerHTML = "Concentraciones: <span style='color:red'>&nbsp;&nbsp;" + redPoint.y.toFixed(3) + "</span><span style='color:blue'>&nbsp;&nbsp;" + bluePoint.y.toFixed(3) + "</span><span style='color:green'>&nbsp;&nbsp;" + greenPoint.y.toFixed(3) + "</span>";
                 //curTxt.style.left=e.clientX + 5 +'px';
                 //curTxt.style.top=e.clientY - curTxt.offsetHeight - 5 + 'px';
             }
