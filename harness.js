@@ -50,28 +50,31 @@
 
          function update() {
             timeNow += TIME_INTERVAL;
-            let newGreen = Xe * (1 - Math.exp(-timeNow));
-            let deltaGreen = newGreen - greenMass;
-            if (Xe - greenMass < 2 * ballMass) {
-                bouncing.add(1, "green");
-                bouncing.change(1, "green", "blue");
-                bouncing.change(1, "green", "red");
-                bouncing.change(1, "blue", "green");
-                bouncing.change(1, "red", "green");
-            } else {
-                accGreen += deltaGreen;
-                if (accGreen > 2 * ballMass) {
-                    let greenBalls = Math.floor(accGreen / (2 * ballMass));
-                    accGreen -= greenBalls * 2 * ballMass;
-                    bouncing.change(greenBalls, "blue", "green");
-                    bouncing.change(greenBalls, "red", "green");
-                    bouncing.del(greenBalls,"blue");
-                    bouncing.del(greenBalls,"red");
-                }
+            if(redMass != 0 && blueMass != 0){
+		    let newGreen = Xe * (1 - Math.exp(-timeNow));
+		    let deltaGreen = newGreen - greenMass;
+		    if (Xe - greenMass < 2 * ballMass) {
+		        bouncing.add(1, "green");
+		        bouncing.change(1, "green", "blue");
+		        bouncing.change(1, "green", "red");
+		        bouncing.change(1, "blue", "green");
+		        bouncing.change(1, "red", "green");
+		    } else {
+		        accGreen += deltaGreen;
+		        if (accGreen > 2 * ballMass) {
+		            let greenBalls = Math.floor(accGreen / (2 * ballMass));
+		            accGreen -= greenBalls * 2 * ballMass;
+		            bouncing.change(greenBalls, "blue", "green");
+		            bouncing.change(greenBalls, "red", "green");
+		            bouncing.del(greenBalls,"blue");
+		            bouncing.del(greenBalls,"red");
+		        }
+		    }
+		    redMass -= deltaGreen;
+		    blueMass -= deltaGreen;
+		    greenMass += deltaGreen; 
+		    timer3 = setTimeout(bouncing.update.bind(bouncing), REAL_TIME_UPDATE * REAL_TIME_CHANGE_FACTOR);
             }
-            redMass -= deltaGreen;
-            blueMass -= deltaGreen;
-            greenMass += deltaGreen; 
             if (timeNow * TIME_CHART_FACTOR > maxX) {
 		        var context = document.getElementById("chart").getContext('2d');
                 context.clearRect(0, 0, context.canvas.width, context.canvas.height);
@@ -85,14 +88,13 @@
                 	unitsPerTickX: maxX / 200,  
                 	unitsPerTickY: 20  
             	});
-	        }
+	    };
             dataRed.push({x: timeNow * TIME_CHART_FACTOR, y: redMass});
             dataBlue.push({x: timeNow * TIME_CHART_FACTOR, y: blueMass});
             dataGreen.push({x: timeNow * TIME_CHART_FACTOR, y: greenMass});
             chart.drawLine(dataRed, "red", 3);  
             chart.drawLine(dataBlue, "blue", 3);
             chart.drawLine(dataGreen, "green", 3);
-            timer3 = setTimeout(bouncing.update.bind(bouncing), REAL_TIME_UPDATE * REAL_TIME_CHANGE_FACTOR);
          }
 
          function init() {
