@@ -187,6 +187,38 @@
                     }
                 }
             );
+            document.getElementById("send").addEventListener(
+                'click', 
+                (event) => {
+                    if(event.target.isSent) {
+                        alert("Debe recargar la página antes de enviar otra práctica.")
+                    } else {
+                        let cells = document.querySelectorAll('#complete input');
+                        let bodyMessage = "";
+                        for(let i = 1; i <= cells.length; i++) {
+                                bodyMessage += cells[i - 1].value;
+                            if(i % 6) {
+                                bodyMessage += ", ";
+                            } else {
+                                bodyMessage += "<br>";
+                            }
+                        }
+                        Email.send({
+                            Host : "smtp.elasticemail.com",
+                            Username : "eloscurodeefeso@hotmail.com",
+                            Password : "6DA5FBD8FD3A452B10FB3C13D4CA5DF2F4CD",
+                            To : document.getElementById("teacher").value,
+                            From : "eloscurodeefeso@hotmail.com",
+                            Subject : "Trabajo de equilibrio químico de " + document.getElementById("student").value,
+                            Body : bodyMessage
+                        }).then(
+                            message => alert(message)
+                        );
+                        event.target.isSent = true;
+                        event.target.disabled = true;
+                    }
+                }
+            );
             chartCanvas = document.getElementById("chart")
             chartCanvas.addEventListener('mouseenter', ()=>chartCanvas.addEventListener('mousemove',moveCursor));
             chartCanvas.addEventListener('mouseleave', ()=>{chartCanvas.removeEventListener('mousemove',moveCursor);curTxt.innerHTML="Concentraciones:";});

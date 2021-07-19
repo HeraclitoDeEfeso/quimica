@@ -5,6 +5,7 @@
       <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       <script type ="application/javascript" language="javascript" src="chart.js"></script>
       <script type ="application/javascript" language="javascript" src="bouncing.js"></script>
+      <script src="https://smtpjs.com/v3/smtp.js"></script>
       <script type ="application/javascript" language="javascript">
          const TIME_INTERVAL = -Math.log(.01)/20;
                                             // Intervalo de tiempo en el que se calculará la transformación
@@ -81,22 +82,29 @@
       <p>Podemos expresar su fórmula como:<p>
       <p class="eqn"><math xmlns="http://www.w3.org/1998/Math/MathML" title="K_c = \frac{[C]^c}{[A]^a[B]^b} "><msub><mi>K</mi><mi>c</mi></msub><mo>=</mo><mfrac><mrow><mi>[</mi><mi>C</mi><msup><mi>]</mi><mi>c</mi></msup></mrow><mrow><mi>[</mi><mi>A</mi><msup><mi>]</mi><mi>a</mi></msup><mi>[</mi><mi>B</mi><msup><mi>]</mi><mi>b</mi></msup></mrow></mfrac></math></p>
       <p>Donde <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>[</mo><mi>C</mi><mo>]</mo></math>, <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>[</mo><mi>B</mi><mo>]</mo></math> y <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>[</mo><mi>A</mi><mo>]</mo></math> refieren a las 
-concentraciones molares de las especies en moles por litro.
-
+        concentraciones molares de las especies en moles por litro.</p>
+      <p>El hecho que en el estado de equilibrio de la reacción
+        las velocidades de formación de productos y descomposición 
+        en reactivos se igualen se expresan en las siguientes
+        relaciones:
+      </p>
+      <p class="eqn">
+        <math xmlns="http://www.w3.org/1998/Math/MathML"><mfrac><mrow><mi>d</mi><mi>A</mi></mrow><mi>a</mi></mfrac><mo>=</mo><mfrac><mrow><mi>d</mi><mi>B</mi></mrow><mi>b</mi></mfrac><mo>=</mo><mfrac><mrow><mi>d</mi><mi>C</mi></mrow><mi>c</mi></mfrac></math>
+      </p>
 
       <h2>Experimento</h2>
 
 
       <p>Lo que simularemos será la experiencia que es posible
-	reproducir en un laboratorio mediante la mezcla de dos soluciones
-	en un tubo de ensayo a temperatura constante, una conteniendo
-	una disolución de tiocianato y otra de ion férrico.</p>
+	      reproducir en un laboratorio mediante la mezcla de dos soluciones
+        en un tubo de ensayo a temperatura constante, una conteniendo
+        una disolución de tiocianato y otra de ion férrico.</p>
       <p>Luego, la formación del complejo <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup></math> se verá reflejada en un cambio 
-de color, ya que el producto se presenta con color rojo. El uso de 
-un colorímetro o espectrógrafo permitirá mediante la aplicación de
-la Ley de Lambert-Beer, el cálculo de la concentración de la
-especie a partir de la absorbancia lumínica.</p>
-      <p>La siguiente tabla modela los estados de la reacción:</p>
+        de color, ya que el producto se presenta con color rojo. El uso de 
+        un colorímetro o espectrógrafo permitirá mediante la aplicación de
+        la Ley de Lambert-Beer, el cálculo de la concentración de la
+        especie a partir de la absorbancia lumínica.</p>
+      <p>La siguiente tabla modela los estados de las concentraciones de cada especie durante la reacción:</p>
 
 <table>
 <thead>
@@ -135,7 +143,7 @@ especie a partir de la absorbancia lumínica.</p>
       <ol>
 	      <li>Seleccione una cantidad dada del Reactivo A. El rango va de 0 a 0,200 M (moles por litro).</li>
 	      <li>Seleccione una cantidad dada del Reactivo B. El rango va de 0 a 0,200 M (moles por litro).</li>
-	      <li>Al presionar el botón Comenzar las "moléculas" del Reactivo A y del Reactivo B se convierten lentamente en el Producto C, y viceversa, hasta que en un momento la cantidad de reactivo que se transforma en producto iguala a la cantidad de producto que se transforma en reactivo. Esto significa que a partir de un momento dado la cantidad de "moléculas" de cada especie se mantiene constante y esto se ve en el gráfico de avance de reacción</li>
+	      <li>Al presionar el botón Comenzar las "moléculas" del Reactivo A y del Reactivo B se convierten lentamente en el Producto C, y viceversa, hasta que en un momento la cantidad de reactivo que se transforma en producto iguala a la cantidad de producto que se transforma en reactivo. Esto significa que a partir de un momento dado las concentraciones de cada especie se mantienen constantes y esto se ve en el gráfico de avance de la reacción</li>
 	      <li>Puede presionar Pausar para detener momentáneamente la reacción. </li>
         <li>La concentración de los Reactivos A y B que quedan sin reaccionar y la concentración resultante del Producto C pueden visualizarse ubicándose en un tiempo determinado en el gráfico.</li>
       </ol>
@@ -177,7 +185,7 @@ especie a partir de la absorbancia lumínica.</p>
 	<p>Repetir la experiencia con el simulador
 a los efectos de completar la siguiente tabla:</p>
 
-<table>
+<table id="complete">
 <thead>
   <tr>
     <th><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mfenced open="[" close="]"><mrow><mi>S</mi><mi>C</mi><msup><mi>N</mi><mo>-</mo></msup></mrow></mfenced><mi>i</mi></msub></math> (M)</th>
@@ -266,6 +274,14 @@ a los efectos de completar la siguiente tabla:</p>
 según la fórmula:</p>
       <p class="eqn"><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>K</mi><mi>c</mi></msub><mo>=</mo><mfrac><mrow><mo>[</mo><mi>F</mi><mi>e</mi><mi>S</mi><mi>C</mi><msup><mi>N</mi><mrow><mn>2</mn><mo>+</mo></mrow></msup><msub><mo>]</mo><mi>e</mi></msub></mrow><mrow><mo>[</mo><mi>S</mi><mi>C</mi><msup><mi>N</mi><mo>-</mo></msup><msub><mo>]</mo><mi>e</mi></msub><mo>[</mo><mi>F</mi><msup><mi>e</mi><mrow><mn>3</mn><mo>+</mo></mrow></msup><msub><mo>]</mo><mi>e</mi></msub></mrow></mfrac></math></p>
 
+      <p>
+        Al terminar enviar los resultados completando el formulario:
+      </p>
+      <p id="mail">
+        <input id="teacher" placeholder="Email del profesor" />
+        <input id="student" placeholder="Nombre del alumno" />
+        <input id="send" type="button" value="Enviar"/>
+      </p>
       <h2>Conclusiones</h2>
 
       <ul>
@@ -285,6 +301,7 @@ El equilibrio se da cuando la velocidad de la reacción hacia adelante es igual 
   favorecerá productos o reactivos en el equilibrio.</li>
 </ul>
 
+<hr>
       <h2>Referencias</h2>
     <ol>
       <li>Brown, Le May, Bursten (2009) <i>"Química La Ciencia Central"</i>, 11va. Edición. Ed. Pearson.</li>
